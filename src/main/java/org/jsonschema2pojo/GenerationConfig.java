@@ -580,14 +580,4 @@ public interface GenerationConfig {
      */
     default boolean isUseInnerClassBuilders(){ return false;}
 
-
-    /**
-     * Gets the `formatDateTime` configuration option
-     *
-     * @return Whether the fields of type <code>date-type</code> have the
-     *         <code>@JsonFormat</code> annotation with pattern set to the
-     *         default value of <code>yyyy-MM-dd'T'HH:mm:ss.SSSZ</code>
-     */
-    default boolean isSetXsdRootElement(){return false;}
-
 }

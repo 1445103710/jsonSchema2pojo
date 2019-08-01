@@ -1,4 +1,4 @@
-package com.wltt.jsonschemapojo.jsonschemapojo;
+package com.yaoyao.jsonschemapojo.jsonschemapojo;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

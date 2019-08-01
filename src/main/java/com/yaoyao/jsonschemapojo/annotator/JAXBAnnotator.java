@@ -1,4 +1,4 @@
-package com.wltt.jsonschemapojo.jsonschemapojo.annotator;
+package com.yaoyao.jsonschemapojo.annotator;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.gson.annotations.Expose;

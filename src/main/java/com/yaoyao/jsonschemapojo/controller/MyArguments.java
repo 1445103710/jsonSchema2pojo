@@ -1,4 +1,4 @@
-package com.wltt.jsonschemapojo.jsonschemapojo.controller;
+package com.yaoyao.jsonschemapojo.controller;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 import static org.apache.commons.lang.StringUtils.defaultString;
 
 /**
- * @Author: wltt
+ * @Author: yaoyao
  * @Date: 2019/7/8 15:06
  * @Version: 1.0
  * @Description: TODO
@@ -328,7 +328,6 @@ public class MyArguments implements GenerationConfig {
     private List<String> formatTypeMapping;
     private static final int EXIT_OKAY = 0;
     private static final int EXIT_ERROR = 1;
-    private boolean isSetXsdRootElement;
 
     public MyArguments() {
         this.annotationStyle = AnnotationStyle.JACKSON;
@@ -367,7 +366,6 @@ public class MyArguments implements GenerationConfig {
         this.sourceSortOrder = SourceSortOrder.OS;
         this.targetLanguage = Language.JAVA;
         this.formatTypeMapping = new ArrayList();
-        this.isSetXsdRootElement = false;
     }
 
     public MyArguments parse(String[] args) {
@@ -679,11 +677,6 @@ public class MyArguments implements GenerationConfig {
     @Override
     public Language getTargetLanguage() {
         return this.targetLanguage;
-    }
-
-    @Override
-    public boolean isSetXsdRootElement() {
-        return this.isSetXsdRootElement;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.wltt.jsonschemapojo.jsonschemapojo.util;
+package com.yaoyao.jsonschemapojo.util;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

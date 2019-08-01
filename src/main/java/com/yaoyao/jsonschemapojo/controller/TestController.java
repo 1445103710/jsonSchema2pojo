@@ -1,8 +1,8 @@
-package com.wltt.jsonschemapojo.jsonschemapojo.controller;
+package com.yaoyao.jsonschemapojo.controller;
 
 import com.google.gson.Gson;
-import com.wltt.jsonschemapojo.jsonschemapojo.javaFile.TebieYao;
-import com.wltt.jsonschemapojo.jsonschemapojo.util.JaxbUtil;
+import com.yaoyao.jsonschemapojo.javaFile.TebieYao;
+import com.yaoyao.jsonschemapojo.util.JaxbUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.jsonschema2pojo.AnnotationStyle;
 import org.jsonschema2pojo.Jsonschema2Pojo;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @Author: wltt
+ * @Author: yaoyao
  * @Date: 2019/7/8 14:44
  * @Version: 1.0
  * @Description: TODO
@@ -32,16 +32,15 @@ public class TestController {
         try {
             MyArguments arguments = new MyArguments();
             List<URL> sourceList = new ArrayList();
-            sourceList.add(new File("/Users/yaoyao/IdeaProjects/practise/json-schema-pojo/jsonSchema/tebie_yao.jsonSchema").toURI().toURL());
+            sourceList.add(new File("/Users/yaoyao/IdeaProjects/github/yaoyaojsonSchema2pojo/jsonSchema/tebie_yao.jsonSchema").toURI().toURL());
             arguments.setSourcePaths(sourceList);
-            arguments.setTargetDirectory(new File("/Users/yaoyao/IdeaProjects/practise/json-schema-pojo/javaFile"));
+            arguments.setTargetDirectory(new File("/Users/yaoyao/IdeaProjects/github/yaoyaojsonSchema2pojo/javaFile"));
             arguments.setAnnotationStyle(AnnotationStyle.JAXB);
             arguments.setTargetPackage("com_yao_xx");
             arguments.setIncludeJsr303Annotations(true);
             arguments.setIncludeJsr305Annotations(true);
             arguments.setSerializable(true);
             arguments.setRemoveOldOutput(true);
-            arguments.setSetXsdRootElement(true);
             arguments.setClassNamePrefix("yaoyao");
             arguments.setClassNameSuffix("nana");
             Jsonschema2Pojo.generate(arguments);

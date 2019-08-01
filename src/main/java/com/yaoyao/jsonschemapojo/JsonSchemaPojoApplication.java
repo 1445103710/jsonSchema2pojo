@@ -1,4 +1,4 @@
-package com.wltt.jsonschemapojo.jsonschemapojo;
+package com.yaoyao.jsonschemapojo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,6 +1,7 @@
 package org.jsonschema2pojo;
 
-import com.wltt.jsonschemapojo.jsonschemapojo.annotator.JAXBAnnotator;
+
+import com.yaoyao.jsonschemapojo.annotator.JAXBAnnotator;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

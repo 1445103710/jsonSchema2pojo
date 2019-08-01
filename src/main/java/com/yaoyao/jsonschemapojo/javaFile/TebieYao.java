@@ -1,5 +1,5 @@
 
-package com.wltt.jsonschemapojo.jsonschemapojo.javaFile;
+package com.yaoyao.jsonschemapojo.javaFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;

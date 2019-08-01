@@ -515,10 +515,6 @@ public class ObjectRule implements Rule<JPackage, JType> {
     }
     private void addXsdRootElement(JDefinedClass clazz,String nodeName){
         clazz.annotate(XmlAccessorType.class).param("value", XmlAccessType.FIELD);
-        if (ruleFactory.getGenerationConfig().isSetXsdRootElement()) {
-            clazz.annotate(XmlRootElement.class).param("name", nodeName);
-        }else {
-            clazz.annotate(XmlRootElement.class);
-        }
+        clazz.annotate(XmlRootElement.class).param("name", nodeName);
     }
 }
