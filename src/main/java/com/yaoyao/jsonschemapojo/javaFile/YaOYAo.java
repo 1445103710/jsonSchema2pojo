@@ -1,6 +1,8 @@
 
 package com.yaoyao.jsonschemapojo.javaFile;
 
+import java.io.Serializable;
+import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -11,7 +13,8 @@ import com.google.gson.annotations.SerializedName;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "YaO_YAo")
-public class YaOYAo {
+public class YaOYAo implements Serializable
+{
 
     /**
      * 
@@ -22,6 +25,7 @@ public class YaOYAo {
     @Expose
     @Size(min = 2, max = 10)
     @NotNull
+    @Nonnull
     private String name;
     /**
      * 
@@ -31,6 +35,7 @@ public class YaOYAo {
     @SerializedName("age")
     @Expose
     @NotNull
+    @Nonnull
     private String age;
     /**
      * 
@@ -40,7 +45,9 @@ public class YaOYAo {
     @SerializedName("love")
     @Expose
     @NotNull
+    @Nonnull
     private String love;
+    private final static long serialVersionUID = -6041878222439512914L;
 
     /**
      * 

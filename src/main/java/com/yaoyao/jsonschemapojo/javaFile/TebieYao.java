@@ -1,6 +1,9 @@
 
 package com.yaoyao.jsonschemapojo.javaFile;
 
+import java.io.Serializable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -19,8 +22,10 @@ import com.google.gson.annotations.SerializedName;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "tebie_yao")
-public class TebieYao {
+public class TebieYao implements Serializable
+{
 
+    @Nullable
     @XmlElement(name = "YaO_YAo")
     @SerializedName("YaO_YAo")
     @Expose
@@ -35,7 +40,14 @@ public class TebieYao {
     @SerializedName("Xml_json_DX")
     @Expose
     @NotNull
+    @Nonnull
     private String xmlJsonDX;
+    /**
+     * 
+     * (Can be null)
+     * 
+     */
+    @Nullable
     @SerializedName("copy")
     @Expose
     private String copy;
@@ -48,7 +60,9 @@ public class TebieYao {
     @SerializedName("class")
     @Expose
     @NotNull
+    @Nonnull
     private String _class;
+    private final static long serialVersionUID = -919874736401678720L;
 
     public YaOYAo getYaOYAo() {
         return yaOYAo;

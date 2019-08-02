@@ -1,6 +1,7 @@
-package com.yaoyao.jsonschemapojo.controller;
+package com.yaoyao.controller;
 
 import com.google.gson.Gson;
+import com.yaoyao.jsonschemapojo.controller.MyArguments;
 import com.yaoyao.jsonschemapojo.javaFile.TebieYao;
 import com.yaoyao.jsonschemapojo.util.JaxbUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -41,8 +42,6 @@ public class TestController {
             arguments.setIncludeJsr305Annotations(true);
             arguments.setSerializable(true);
             arguments.setRemoveOldOutput(true);
-            arguments.setClassNamePrefix("yaoyao");
-            arguments.setClassNameSuffix("nana");
             Jsonschema2Pojo.generate(arguments);
 
         } catch (Exception e) {
