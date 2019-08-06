@@ -513,8 +513,13 @@ public class ObjectRule implements Rule<JPackage, JType> {
         }
         return false;
     }
+    //增加XmlRootElement注解
     private void addXsdRootElement(JDefinedClass clazz,String nodeName){
         clazz.annotate(XmlAccessorType.class).param("value", XmlAccessType.FIELD);
-        clazz.annotate(XmlRootElement.class).param("name", nodeName);
+        if(ruleFactory.getGenerationConfig().getFileName().equals(nodeName)){
+            clazz.annotate(XmlRootElement.class).param("name", ruleFactory.getGenerationConfig().getXmlRootElement());
+        }else {
+            clazz.annotate(XmlRootElement.class).param("name", nodeName);
+        }
     }
 }

@@ -98,7 +98,9 @@ public class XmlUtil
     {
         Assert.notNull(element, "element should never be null");
         final Document doc = element.getOwnerDocument() != null ? element.getOwnerDocument() : ((Document) element);
-        final Element retVal = doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, name);
+        //todo 更改生成的name schema带上命名空间
+        //final Element retVal = doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, name);
+        final Element retVal = doc.createElement(name);
         element.appendChild(retVal);
         return retVal;
     }

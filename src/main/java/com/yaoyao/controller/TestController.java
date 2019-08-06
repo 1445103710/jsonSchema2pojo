@@ -50,6 +50,28 @@ public class TestController {
         return "搞定";
     }
 
+    @RequestMapping("/jsonSchemaToJava2")
+    public String jsonSchemaToJava2(){
+        try {
+            MyArguments arguments = new MyArguments();
+            List<URL> sourceList = new ArrayList();
+            sourceList.add(new File("/Users/yaoyao/IdeaProjects/github/yaoyaojsonSchema2pojo/jsonSchema/req.jsonSchema").toURI().toURL());
+            arguments.setSourcePaths(sourceList);
+            arguments.setTargetDirectory(new File("/Users/yaoyao/IdeaProjects/github/yaoyaojsonSchema2pojo/javaFile"));
+            arguments.setAnnotationStyle(AnnotationStyle.JAXB);
+            arguments.setTargetPackage("com_yao_xx");
+            arguments.setSerializable(true);
+            arguments.setRemoveOldOutput(true);
+            arguments.setXmlRootElement("Xml_ROOT_SJJD");
+            arguments.setFileName("Req12345");
+            Jsonschema2Pojo.generate(arguments);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "搞定";
+    }
+
     @RequestMapping("/xml2json")
     public String xml(@RequestBody String content){
         try {

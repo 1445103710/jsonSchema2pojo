@@ -165,16 +165,18 @@ public class Jsons2Xsd
     {
         if (cfg.isCreateRootElement())
         {
-            final Element wrapper = element(schemaRoot, XSD_ELEMENT);
+            final Element wrapper = element(schemaRoot, XSD_ELEMENT,cfg);
             wrapper.setAttribute(FIELD_NAME, cfg.getName());
             //删除自定义的
             //wrapper.setAttribute("type", cfg.getNsAlias() + ":" + cfg.getName());
+            //如果具有根节点，放置根节点内
+            final Element schemaComplexType = element(wrapper, XSD_COMPLEXTYPE,cfg);
+            return element(schemaComplexType, XSD_SEQUENCE,cfg);
         }
 
-        final Element schemaComplexType = element(schemaRoot, XSD_COMPLEXTYPE);
-        schemaComplexType.setAttribute(FIELD_NAME, cfg.getName());
-
-        return element(schemaComplexType, XSD_SEQUENCE);
+        final Element schemaComplexType = element(schemaRoot, XSD_COMPLEXTYPE,cfg);
+        //schemaComplexType.setAttribute(FIELD_NAME, cfg.getName());
+        return element(schemaComplexType, XSD_SEQUENCE,cfg);
     }
 
     private static void handleObjectSchema(Config cfg, final JsonNode rootNode, final Element schemaRoot, final Set<String> neededElements)
@@ -193,11 +195,12 @@ public class Jsons2Xsd
         final Document xsdDoc = XmlUtil.newDocument();
         xsdDoc.setXmlStandalone(true);
 
-        final Element schemaRoot = element(xsdDoc, "schema");
+        final Element schemaRoot = element(xsdDoc, "schema",cfg);
         //todo 删除命名空间
         //schemaRoot.setAttribute("targetNamespace", cfg.getTargetNamespace());
-        //schemaRoot.setAttribute("xmlns:" + cfg.getNsAlias(), cfg.getTargetNamespace());
+        schemaRoot.setAttribute("xmlns:" + cfg.getNsAlias(), cfg.getTargetNamespace());
         schemaRoot.setAttribute("elementFormDefault", "qualified");
+        //schemaRoot.setPrefix(cfg.getNsAlias());
         if (cfg.isAttributesQualified())
         {
             schemaRoot.setAttribute("attributeFormDefault", "qualified");
@@ -221,13 +224,13 @@ public class Jsons2Xsd
 
             if (key.equals("Link"))
             {
-                final Element schemaComplexType = element(elem, XSD_COMPLEXTYPE);
+                final Element schemaComplexType = element(elem, XSD_COMPLEXTYPE,cfg);
                 schemaComplexType.setAttribute(FIELD_NAME, key);
-                final Element href = element(schemaComplexType, XSD_ATTRIBUTE);
-                final Element rel = element(schemaComplexType, XSD_ATTRIBUTE);
-                final Element title = element(schemaComplexType, XSD_ATTRIBUTE);
-                final Element method = element(schemaComplexType, XSD_ATTRIBUTE);
-                final Element type = element(schemaComplexType, XSD_ATTRIBUTE);
+                final Element href = element(schemaComplexType, XSD_ATTRIBUTE,cfg);
+                final Element rel = element(schemaComplexType, XSD_ATTRIBUTE,cfg);
+                final Element title = element(schemaComplexType, XSD_ATTRIBUTE,cfg);
+                final Element method = element(schemaComplexType, XSD_ATTRIBUTE,cfg);
+                final Element type = element(schemaComplexType, XSD_ATTRIBUTE,cfg);
 
                 href.setAttribute(FIELD_NAME, "href");
                 href.setAttribute("type", XsdSimpleType.STRING_VALUE);
@@ -256,13 +259,14 @@ public class Jsons2Xsd
         final JsonNode properties = node.get(FIELD_PROPERTIES);
         if (properties != null)
         {
-            final Element complexType = element(elem, XSD_COMPLEXTYPE);
-            final boolean parentIsElement = elem.getNodeName().equals(XSD_ELEMENT);
-            if (! parentIsElement)
-            {
-                complexType.setAttribute(FIELD_NAME, key);
-            }
-            final Element schemaSequence = element(complexType, XSD_SEQUENCE);
+            final Element complexType = element(elem, XSD_COMPLEXTYPE,cfg);
+            //包含element内容。不加name属性
+//            final boolean parentIsElement = elem.getNodeName().equals(XSD_ELEMENT);
+//            if (! parentIsElement)
+//            {
+//                complexType.setAttribute(FIELD_NAME, key);
+//            }
+            final Element schemaSequence = element(complexType, XSD_SEQUENCE,cfg);
 
             doIterate(neededElements, schemaSequence, properties, getRequiredList(node), cfg);
         }
@@ -275,11 +279,11 @@ public class Jsons2Xsd
 
     private static void handleChoice(Set<String> neededElements, Element elem, ArrayNode oneOf, Config cfg)
     {
-        final Element complexTypeElem = element(elem, XSD_COMPLEXTYPE);
-        final Element choiceElem = element(complexTypeElem, XSD_CHOICE);
+        final Element complexTypeElem = element(elem, XSD_COMPLEXTYPE,cfg);
+        final Element choiceElem = element(complexTypeElem, XSD_CHOICE,cfg);
         for (JsonNode e : oneOf)
         {
-            final Element nodeElem = element(choiceElem, XSD_ELEMENT);
+            final Element nodeElem = element(choiceElem, XSD_ELEMENT,cfg);
             final JsonNode refs = e.get(JSON_REF);
             String fixRef = refs.asText().replace("#/definitions/", cfg.getNsAlias() + ":");
             String name = fixRef.substring(cfg.getNsAlias().length() + 1);
@@ -318,14 +322,14 @@ public class Jsons2Xsd
     private static void doIterateSingle(Set<String> neededElements, String name, JsonNode val, Element elem, boolean required, Config cfg)
     {
         final String xsdType = determineXsdType(cfg, name, val);
-        final Element nodeElem = element(elem, XSD_ELEMENT);
+        final Element nodeElem = element(elem, XSD_ELEMENT,cfg);
 
         nodeElem.setAttribute(FIELD_NAME, name);
 
         if (!XSD_OBJECT.equals(xsdType) && !XSD_ARRAY.equals(xsdType))
         {
             // Simple type
-            nodeElem.setAttribute("type", xsdType);
+            nodeElem.setAttribute("type", cfg.getNsAlias()+":"+xsdType);
         }
 
         if (!required)
@@ -342,11 +346,11 @@ public class Jsons2Xsd
 
             case XsdSimpleType.DECIMAL_VALUE:
             case XsdSimpleType.INT_VALUE:
-                handleNumber(nodeElem, xsdType, val);
+                handleNumber(nodeElem, xsdType, val,cfg);
                 break;
 
             case "enum":
-                handleEnum(nodeElem, val);
+                handleEnum(nodeElem, val,cfg);
                 break;
 
             case XSD_OBJECT:
@@ -354,7 +358,7 @@ public class Jsons2Xsd
                 break;
 
             case XsdSimpleType.STRING_VALUE:
-                handleString(nodeElem, val);
+                handleString(nodeElem, val,cfg);
                 break;
 
             case TYPE_REFERENCE:
@@ -382,7 +386,7 @@ public class Jsons2Xsd
         neededElements.add(name);
     }
 
-    private static void handleString(Element nodeElem, JsonNode val)
+    private static void handleString(Element nodeElem, JsonNode val, Config cfg)
     {
         final Integer minimumLength = getIntVal(val, "minLength");
         final Integer maximumLength = getIntVal(val, "maxLength");
@@ -391,46 +395,46 @@ public class Jsons2Xsd
         if (minimumLength != null || maximumLength != null || expression != null)
         {
             nodeElem.removeAttribute("type");
-            final Element simpleType = element(nodeElem, XSD_SIMPLETYPE);
-            final Element restriction = element(simpleType, XSD_RESTRICTION);
-            restriction.setAttribute("base", XsdSimpleType.STRING_VALUE);
+            final Element simpleType = element(nodeElem, XSD_SIMPLETYPE,cfg);
+            final Element restriction = element(simpleType, XSD_RESTRICTION,cfg);
+            restriction.setAttribute("base", cfg.getNsAlias()+":"+XsdSimpleType.STRING_VALUE);
 
             if (minimumLength != null)
             {
-                final Element min = element(restriction, "minLength");
+                final Element min = element(restriction, "minLength",cfg);
                 min.setAttribute(XSD_VALUE, Integer.toString(minimumLength));
             }
 
             if (maximumLength != null)
             {
-                final Element max = element(restriction, "maxLength");
+                final Element max = element(restriction, "maxLength",cfg);
                 max.setAttribute(XSD_VALUE, Integer.toString(maximumLength));
             }
 
             if (expression != null)
             {
-                final Element max = element(restriction, "pattern");
+                final Element max = element(restriction, "pattern",cfg);
                 max.setAttribute(XSD_VALUE, expression);
             }
         }
     }
 
-    private static void handleEnum(Element nodeElem, JsonNode val)
+    private static void handleEnum(Element nodeElem, JsonNode val, Config cfg)
     {
         nodeElem.removeAttribute("type");
-        final Element simpleType = element(nodeElem, XSD_SIMPLETYPE);
-        final Element restriction = element(simpleType, XSD_RESTRICTION);
-        restriction.setAttribute("base", XsdSimpleType.STRING_VALUE);
+        final Element simpleType = element(nodeElem, XSD_SIMPLETYPE,cfg);
+        final Element restriction = element(simpleType, XSD_RESTRICTION,cfg);
+        restriction.setAttribute("base", cfg.getNsAlias()+":"+XsdSimpleType.STRING_VALUE);
         final JsonNode enumNode = val.get("enum");
         for (int i = 0; i < enumNode.size(); i++)
         {
             final String enumVal = enumNode.path(i).asText();
-            final Element enumElem = element(restriction, "enumeration");
+            final Element enumElem = element(restriction, "enumeration",cfg);
             enumElem.setAttribute(XSD_VALUE, enumVal);
         }
     }
 
-    private static void handleNumber(Element nodeElem, String xsdType, JsonNode jsonNode)
+    private static void handleNumber(Element nodeElem, String xsdType, JsonNode jsonNode, Config cfg)
     {
         final Integer minimum = getIntVal(jsonNode, "minimum");
         final Integer maximum = getIntVal(jsonNode, "maximum");
@@ -438,19 +442,19 @@ public class Jsons2Xsd
         if (minimum != null || maximum != null)
         {
             nodeElem.removeAttribute("type");
-            final Element simpleType = element(nodeElem, XSD_SIMPLETYPE);
-            final Element restriction = element(simpleType, XSD_RESTRICTION);
-            restriction.setAttribute("base", xsdType);
+            final Element simpleType = element(nodeElem, XSD_SIMPLETYPE,cfg);
+            final Element restriction = element(simpleType, XSD_RESTRICTION,cfg);
+            restriction.setAttribute("base", cfg.getNsAlias()+":"+xsdType);
 
             if (minimum != null)
             {
-                final Element min = element(restriction, "minInclusive");
+                final Element min = element(restriction, "minInclusive",cfg);
                 min.setAttribute(XSD_VALUE, Integer.toString(minimum));
             }
 
             if (maximum != null)
             {
-                final Element max = element(restriction, "maxInclusive");
+                final Element max = element(restriction, "maxInclusive",cfg);
                 max.setAttribute(XSD_VALUE, Integer.toString(maximum));
             }
         }
@@ -460,9 +464,9 @@ public class Jsons2Xsd
     {
         final JsonNode arrItems = jsonNode.path("items");
         final String arrayXsdType = determineXsdType(cfg, arrItems.path("type").textValue(), arrItems);
-        final Element complexType = element(nodeElem, XSD_COMPLEXTYPE);
-        final Element sequence = element(complexType, XSD_SEQUENCE);
-        final Element arrElem = element(sequence, XSD_ELEMENT);
+        final Element complexType = element(nodeElem, XSD_COMPLEXTYPE,cfg);
+        final Element sequence = element(complexType, XSD_SEQUENCE,cfg);
+        final Element arrElem = element(sequence, XSD_ELEMENT,cfg);
         handleArrayElements(neededElements, jsonNode, arrItems, arrayXsdType, arrElem, cfg);
     }
 
@@ -479,7 +483,7 @@ public class Jsons2Xsd
         else
         {
             arrElem.setAttribute(FIELD_NAME, "item");
-            arrElem.setAttribute("type", arrayXsdType);
+            arrElem.setAttribute("type", cfg.getNsAlias()+":"+arrayXsdType);
         }
 
         // Minimum items
@@ -554,9 +558,9 @@ public class Jsons2Xsd
         return node.get(attribute) != null ? node.get(attribute).intValue() : null;
     }
 
-    private static Element element(Node element, String name)
+    private static Element element(Node element, String name,final Config cfg)
     {
-        return XmlUtil.createXsdElement(element, name);
+        return XmlUtil.createXsdElement(element, cfg.getNsAlias()+":"+name);
     }
 
     private static String getType(String type, String format)

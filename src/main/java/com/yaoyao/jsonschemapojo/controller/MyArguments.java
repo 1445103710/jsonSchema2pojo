@@ -328,6 +328,8 @@ public class MyArguments implements GenerationConfig {
     private List<String> formatTypeMapping;
     private static final int EXIT_OKAY = 0;
     private static final int EXIT_ERROR = 1;
+    private String xmlRootElement = "root";
+    private String fileName = "root";
 
     public MyArguments() {
         this.annotationStyle = AnnotationStyle.JACKSON;
@@ -366,6 +368,8 @@ public class MyArguments implements GenerationConfig {
         this.sourceSortOrder = SourceSortOrder.OS;
         this.targetLanguage = Language.JAVA;
         this.formatTypeMapping = new ArrayList();
+        this.xmlRootElement = "root";
+        this.fileName = "root";
     }
 
     public MyArguments parse(String[] args) {
@@ -678,6 +682,17 @@ public class MyArguments implements GenerationConfig {
     public Language getTargetLanguage() {
         return this.targetLanguage;
     }
+
+    @Override
+    public String getXmlRootElement() {
+        return this.xmlRootElement;
+    }
+
+    @Override
+    public String getFileName() {
+        return this.fileName;
+    }
+
 
     @Override
     public Map<String, String> getFormatTypeMapping() {

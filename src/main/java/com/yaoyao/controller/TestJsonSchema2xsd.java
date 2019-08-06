@@ -1,5 +1,6 @@
 package com.yaoyao.controller;
 
+import com.yaoyao.config.ValMapConfig;
 import com.yaoyao.jsons2xsd.Config;
 import com.yaoyao.jsons2xsd.Jsons2Xsd;
 import com.yaoyao.jsons2xsd.XmlUtil;
@@ -26,13 +27,14 @@ public class TestJsonSchema2xsd {
             final Config cfg = new Config.Builder()
                 .createRootElement(true)
                 .targetNamespace("http://www.w3.org/2001/XMLSchema")
-                .nsAlias("xs")
-                .name("Example2")
+                 .nsAlias("xsd")
+                .name("tebie_yao")
                 .validateXsdSchema(true)
                 .build();
             final Document doc = Jsons2Xsd.convert(json, cfg);
             System.out.println(doc);
             System.out.println(XmlUtil.asXmlString(doc.getDocumentElement()));
+            ValMapConfig.setSc("xml",XmlUtil.asXmlString(doc.getDocumentElement()));
             return XmlUtil.asXmlString(doc.getDocumentElement());
         } catch (IOException e) {
             e.printStackTrace();

@@ -1,0 +1,41 @@
+{
+  "type": "object",
+  "title": "empty object",
+  "properties": {
+    "YaO_YAo": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 10
+        },
+        "age": {
+          "type": "string"
+        },
+        "love": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "age",
+        "love"
+      ]
+    },
+    "Xml_json_DX": {
+      "type": "string"
+    },
+    "copy": {
+      "type": "string"
+    },
+    "class": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "Xml_json_DX",
+    "ceshi",
+    "class"
+  ]
+}

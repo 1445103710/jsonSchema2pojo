@@ -580,4 +580,7 @@ public interface GenerationConfig {
      */
     default boolean isUseInnerClassBuilders(){ return false;}
 
+    default String getXmlRootElement(){ return "root";}
+
+    default String getFileName(){ return "root";}
 }

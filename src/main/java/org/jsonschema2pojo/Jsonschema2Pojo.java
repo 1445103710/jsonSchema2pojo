@@ -170,6 +170,10 @@ public class Jsonschema2Pojo {
     }
 
     public static String getNodeName(String filePath, GenerationConfig config) {
+        if (config.getAnnotationStyle()==AnnotationStyle.JAXB){
+            return config.getFileName();
+        }else {
+
         try {
             String fileName = FilenameUtils.getName(URLDecoder.decode(filePath, "UTF-8"));
             String[] extensions = config.getFileExtensions() == null ? new String[] {} : config.getFileExtensions();
@@ -195,6 +199,7 @@ public class Jsonschema2Pojo {
             return fileName;
         } catch (UnsupportedEncodingException e) {
             throw new IllegalArgumentException(String.format("Unable to generate node name from URL: %s", filePath), e);
+        }
         }
     }
     
