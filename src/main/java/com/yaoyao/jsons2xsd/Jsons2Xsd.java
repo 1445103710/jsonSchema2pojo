@@ -464,10 +464,11 @@ public class Jsons2Xsd
     {
         final JsonNode arrItems = jsonNode.path("items");
         final String arrayXsdType = determineXsdType(cfg, arrItems.path("type").textValue(), arrItems);
-        final Element complexType = element(nodeElem, XSD_COMPLEXTYPE,cfg);
-        final Element sequence = element(complexType, XSD_SEQUENCE,cfg);
-        final Element arrElem = element(sequence, XSD_ELEMENT,cfg);
-        handleArrayElements(neededElements, jsonNode, arrItems, arrayXsdType, arrElem, cfg);
+//        final Element complexType = element(nodeElem, XSD_COMPLEXTYPE,cfg);
+//        final Element sequence = element(complexType, XSD_SEQUENCE,cfg);
+//        final Element arrElem = element(sequence, XSD_ELEMENT,cfg);
+//        handleArrayElements(neededElements, jsonNode, arrItems, arrayXsdType, arrElem, cfg);
+        handleArrayElements(neededElements, jsonNode, arrItems, arrayXsdType, nodeElem, cfg);
     }
 
     private static void handleArrayElements(Set<String> neededElements, JsonNode jsonNode, final JsonNode arrItems, final String arrayXsdType, final Element arrElem, Config cfg)

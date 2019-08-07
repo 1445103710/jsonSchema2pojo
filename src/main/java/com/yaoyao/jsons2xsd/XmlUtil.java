@@ -27,6 +27,7 @@ package com.yaoyao.jsons2xsd;
  */
 
 import com.sun.xml.xsom.parser.XSOMParser;
+import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -47,7 +48,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.List;
-
+@Slf4j
 public class XmlUtil
 {
     private XmlUtil()
@@ -114,6 +115,7 @@ public class XmlUtil
         parser.setErrorHandler(errorHandler);
         try
         {
+            log.info("生成xsd："+XmlUtil.asXmlString(doc));
             parser.parse(new StringReader(XmlUtil.asXmlString(doc)));
         }
         catch (SAXException | IOException exc)
